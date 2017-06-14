@@ -14,16 +14,30 @@
 # limitations under the License.
 #
 
-$(call inherit-product, device/xiaomi/markw/full_markw.mk)
+# Inherit from those products. Most specific first.
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
+
+# Inherit from markw device
+$(call inherit-product, device/xiaomi/markw/device.mk)
 
 # Inherit some common LineageOS stuff.
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
+# Device identifier. This must come after all inclusions
+TARGET_VENDOR := Xiaomi
+PRODUCT_DEVICE := markw
 PRODUCT_NAME := lineage_markw
-BOARD_VENDOR := Xiaomi
+PRODUCT_BRAND := Xiaomi
+PRODUCT_MODEL := Redmi 4 Prime
+PRODUCT_MANUFACTURER := Xiaomi
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
     BUILD_FINGERPRINT=Xiaomi/markw/markw:6.0.1/MMB29M/V8.2.4.0.MBEMIDL:user/release-keys \
     PRIVATE_BUILD_DESC="markw-user 6.0.1 MMB29M V8.2.4.0.MBEMIDL release-keys"
 
+# PRODUCT_SYSTEM_PROPERTY_BLACKLIST += ro.product.model
+
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
+
+TARGET_VENDOR := xiaomi
