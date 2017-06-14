@@ -18,6 +18,12 @@ LOCAL_PATH := device/xiaomi/markw
 
 TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 
+# Deodex
+DISABLE_DEXPREOPT := true
+
+# Block based ota
+BLOCK_BASED_OTA := false
+
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
