@@ -177,19 +177,7 @@ on boot
 
     # Goodix Fingerprint
     chown system system /dev/goodix_fp
-    chmod 0644 /dev/goodix_fp        
-    chmod 07777 /system/bin/gx_fpd    
-
-    setprop persist.sys.fp.vendor none
-    start gx_fpd
-
-    # xuchao,add the fp sensor infomation,20161108,start
-    on property:persist.sys.fp.vendor=switchf
-	setprop ro.boot.fpsensor fpc
-
-    on property:persist.sys.fp.vendor=goodix
-	setprop ro.boot.fpsensor gdx
-    # xuchao,add the fp sensor infomation,20161108,end
+    chmod 0644 /dev/goodix_fp
 
     # jacoghi, Double Tap to Wake nodes for Tianma & EBBG LCD
 
@@ -203,7 +191,7 @@ on boot
 
 # MSM specific files that need to be created on /data
 on post-fs-data
-
+    mkdir /data/goodix 0770 system system
     #Create directories for Fingerprint
     mkdir /data/misc/stargate 0770 system system
     mkdir /data/misc/stargate/bg_estimation 0770 system system
@@ -923,18 +911,25 @@ service qseeproxydaemon /system/vendor/bin/qseeproxydaemon
 on charger
     setprop persist.sys.usb.config charging
 
+on property:persist.sys.fp.goodix=1
+    start gx_fpd
+
+on property:persist.sys.fp.goodix=0
+    stop gx_fpd
+
+service gx_fpd /system/bin/gx_fpd
+    class late_start
+    user system
+    group system
+    disabled
+    writepid /dev/cpuset/system-background/tasks
+    
 service fingerprintd /system/bin/fingerprintd
     class late_start
     socket fpce stream 0666 system system
     user  system
     group system sdcard_rw
     system system
-    disabled
-
-service gx_fpd /system/bin/gx_fpd
-    class core
-    user root
-    group system system
     disabled
 
 on property:persist.sys.fp.vendor=switchf
